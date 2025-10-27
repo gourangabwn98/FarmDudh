@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Star,
   Heart,
@@ -12,12 +13,19 @@ import {
   Clock,
   Shield,
   Search,
+  CheckCircle,
 } from "lucide-react";
+import { useCart } from "../components/CartContext";
+// import { useCart } from "./CartContext";
 
 function Products() {
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const products = [
     {
@@ -26,8 +34,8 @@ function Products() {
       category: "milk",
       desc: "Fresh from Purba Burdwan's free-grazing desi cows, rich in A2 protein and nutrients.",
       img: "/assets/images/a2milk.webp",
-      price: 67.0,
-      unit: "per liter",
+      price: 80,
+      unit: "liter",
       rating: 4.9,
       reviews: 156,
       badge: "Best Seller",
@@ -45,8 +53,8 @@ function Products() {
       category: "milk",
       desc: "Creamy, high-fat milk from healthy buffaloes, perfect for making rich dairy products.",
       img: "/assets/images/BUFFALO MILK.png",
-      price: 78,
-      unit: "per liter",
+      price: 70,
+      unit: "liter",
       rating: 4.8,
       reviews: 98,
       badge: "Rich & Creamy",
@@ -64,8 +72,8 @@ function Products() {
       category: "ghee",
       desc: "Hand-churned using traditional bilona method, packed with flavor and health benefits.",
       img: "/assets/images/ghee.webp",
-      price: 450,
-      unit: "per 500g",
+      price: 650,
+      unit: "500g",
       rating: 5.0,
       reviews: 234,
       badge: "Premium",
@@ -83,8 +91,8 @@ function Products() {
       category: "dairy",
       desc: "Soft, homemade paneer crafted daily from pure milk, perfect for cooking.",
       img: "/assets/images/paneer.jpg",
-      price: 80,
-      unit: "per 250g",
+      price: 90,
+      unit: "250g",
       rating: 4.7,
       reviews: 87,
       badge: "Daily Fresh",
@@ -103,9 +111,9 @@ function Products() {
       desc: "Rich, probiotic-packed curd made traditionally, perfect for digestion.",
       img: "/assets/images/dahi.jpeg",
       price: 50,
-      unit: "per 500g",
+      unit: "500g",
       rating: 4.8,
-      reviews: 90,
+      reviews: 143,
       badge: "Probiotic Rich",
       features: [
         "Probiotic",
@@ -122,7 +130,7 @@ function Products() {
       desc: "Refreshing and healthy buttermilk made from pure dahi, aids digestion.",
       img: "/assets/images/dahi.jpeg",
       price: 30,
-      unit: "per 500ml",
+      unit: "500ml",
       rating: 4.6,
       reviews: 76,
       badge: "Healthy",
@@ -146,8 +154,11 @@ function Products() {
     );
   };
 
-  const addToCart = (product) => {
-    alert(`${product.name} added to cart!`);
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    setToastMessage(`${product.name} added to cart!`);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const filteredProducts = products.filter((product) => {
@@ -159,8 +170,20 @@ function Products() {
     return matchesCategory && matchesSearch;
   });
 
+  const finalPrice = (price, discount) => {
+    return price - (price * discount) / 100;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50">
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed top-24 right-4 z-50 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-slideIn">
+          <CheckCircle size={24} />
+          <span className="font-semibold">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -225,7 +248,7 @@ function Products() {
       </section>
 
       {/* Search and Filter Section */}
-      <section className="py-8 bg-white border-b border-gray-200 sticky top-0 z-40 shadow-md">
+      <section className="py-8 bg-white border-b border-gray-200 sticky top-16 z-40 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search Bar */}
@@ -374,8 +397,7 @@ function Products() {
                   {/* Price */}
                   <div className="flex items-baseline gap-2 mb-4">
                     <span className="text-3xl font-extrabold text-green-600">
-                      ₹
-                      {product.price - (product.price * product.discount) / 100}
+                      ₹{finalPrice(product.price, product.discount)}
                     </span>
                     {product.discount > 0 && (
                       <span className="text-lg text-gray-400 line-through">
@@ -383,14 +405,14 @@ function Products() {
                       </span>
                     )}
                     <span className="text-sm text-gray-500">
-                      {product.unit}
+                      per {product.unit}
                     </span>
                   </div>
 
                   {/* Action Buttons */}
                   <div className="flex gap-3">
                     <button
-                      onClick={() => addToCart(product)}
+                      onClick={() => handleAddToCart(product)}
                       className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-6 rounded-full hover:from-green-700 hover:to-emerald-700 shadow-lg font-bold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
                     >
                       <ShoppingCart size={18} />
@@ -420,259 +442,14 @@ function Products() {
         </div>
       </section>
 
-      {/* Why Choose Our Products */}
-      <section className="py-20 bg-gradient-to-br from-green-100 to-emerald-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              Why Choose <span className="text-green-600">FarmDudh</span>?
-            </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Experience the taste of tradition with quality you can trust
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              {
-                Icon: Leaf,
-                title: "100% Pure & Natural",
-                desc: "No additives, preservatives, or processing—just pure dairy goodness.",
-                color: "from-green-500 to-emerald-500",
-              },
-              {
-                Icon: Clock,
-                title: "10-Minute Delivery",
-                desc: "Fresh from farm to your doorstep in just 10 minutes across Purba Burdwan.",
-                color: "from-blue-500 to-cyan-500",
-              },
-              {
-                Icon: Shield,
-                title: "FSSAI Certified",
-                desc: "Tested daily for quality and purity. Your health is our priority.",
-                color: "from-purple-500 to-pink-500",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-              >
-                <div
-                  className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg`}
-                >
-                  <item.Icon className="text-white" size={32} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
-                  {item.title}
-                </h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Products Highlight */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              {/* Left Side - Image */}
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-500 rounded-3xl blur-2xl opacity-20"></div>
-                <img
-                  src="/assets/images/a2milk.webp"
-                  alt="Premium A2 Milk"
-                  className="relative w-full h-96 object-contain rounded-3xl shadow-2xl"
-                />
-                <div className="absolute -bottom-6 -right-6 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-bold shadow-xl">
-                  🏆 Best Seller
-                </div>
-              </div>
-
-              {/* Right Side - Content */}
-              <div>
-                <span className="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
-                  ⭐ FEATURED PRODUCT
-                </span>
-                <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
-                  Pure A2 Desi Cow Milk
-                </h2>
-                <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                  Experience the authentic taste of traditional dairy with our
-                  premium A2 milk, sourced directly from free-grazing desi cows
-                  in Purba Burdwan. Rich in protein, vitamins, and
-                  minerals—naturally.
-                </p>
-
-                <div className="space-y-4 mb-8">
-                  {[
-                    "100% Pure A2 Beta-Casein Protein",
-                    "From Free-Grazing Desi Cows",
-                    "No Hormones or Antibiotics",
-                    "Delivered Fresh Within 10 Minutes",
-                    "FSSAI Certified Quality",
-                  ].map((benefit, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Check className="text-white" size={14} />
-                      </div>
-                      <span className="text-gray-700 font-medium">
-                        {benefit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-baseline gap-3 mb-6">
-                  <span className="text-4xl font-extrabold text-green-600">
-                    ₹72
-                  </span>
-                  <span className="text-2xl text-gray-400 line-through">
-                    ₹80
-                  </span>
-                  <span className="text-lg text-gray-600">per liter</span>
-                </div>
-
-                <button
-                  onClick={() => addToCart(products[0])}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 px-10 rounded-full hover:from-green-700 hover:to-emerald-700 shadow-xl font-bold text-lg transition-all duration-300 hover:scale-105 inline-flex items-center gap-3"
-                >
-                  <ShoppingCart size={22} />
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Customer Reviews Section */}
-      <section className="py-20 bg-gradient-to-b from-green-50 to-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              What Our Customers Say
-            </h2>
-            <div className="flex justify-center items-center gap-2 mb-6">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="text-yellow-400 fill-yellow-400"
-                    size={24}
-                  />
-                ))}
-              </div>
-              <span className="text-2xl font-bold text-gray-900">4.9</span>
-              <span className="text-gray-600">(500+ reviews)</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Priya Sharma",
-                text: "Best A2 milk in Purba Burdwan! My family loves the taste and quality. Delivery is always on time.",
-                rating: 5,
-              },
-              {
-                name: "Amit Kumar",
-                text: "The ghee is absolutely amazing! Pure and aromatic. Worth every rupee. Highly recommended!",
-                rating: 5,
-              },
-              {
-                name: "Sneha Roy",
-                text: "Fresh paneer delivered daily. Perfect for our recipes. Great service and excellent products!",
-                rating: 5,
-              },
-            ].map((review, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <div className="flex mb-3">
-                  {[...Array(review.rating)].map((_, j) => (
-                    <Star
-                      key={j}
-                      className="text-yellow-400 fill-yellow-400"
-                      size={16}
-                    />
-                  ))}
-                </div>
-                <p className="text-gray-700 italic mb-4 leading-relaxed">
-                  "{review.text}"
-                </p>
-                <p className="font-bold text-gray-900">{review.name}</p>
-                <p className="text-sm text-gray-500">Verified Customer</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 relative overflow-hidden">
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-white rounded-full opacity-10"
-              style={{
-                width: Math.random() * 100 + 50 + "px",
-                height: Math.random() * 100 + 50 + "px",
-                left: Math.random() * 100 + "%",
-                top: Math.random() * 100 + "%",
-                animation: `float ${
-                  Math.random() * 15 + 10
-                }s ease-in-out infinite`,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-            Ready to Experience Pure Dairy?
-          </h2>
-          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-            Order now and get 10% off on your first purchase plus free delivery
-            within 10 minutes!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="bg-white text-green-700 py-4 px-12 rounded-full hover:bg-green-50 shadow-2xl text-xl font-bold transition-all duration-300 hover:scale-110 inline-flex items-center justify-center gap-3"
-            >
-              <ShoppingCart size={24} />
-              Start Shopping
-            </button>
-            <button
-              onClick={() => alert("Contact us for bulk orders")}
-              className="bg-transparent border-2 border-white text-white py-4 px-12 rounded-full hover:bg-white/10 shadow-xl text-xl font-bold transition-all duration-300"
-            >
-              Bulk Orders
-            </button>
-          </div>
-
-          <div className="mt-12 flex flex-wrap justify-center gap-8 text-white">
-            <div className="flex items-center gap-2">
-              <Shield className="text-green-300" size={24} />
-              <span className="font-semibold">FSSAI Certified</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="text-green-300" size={24} />
-              <span className="font-semibold">10-Min Delivery</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Leaf className="text-green-300" size={24} />
-              <span className="font-semibold">100% Natural</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* View Cart Button (Sticky) */}
+      <button
+        onClick={() => navigate("/cart")}
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center gap-2 font-bold z-40"
+      >
+        <ShoppingCart size={20} />
+        View Cart
+      </button>
 
       <style>{`
         @keyframes float {
@@ -682,6 +459,21 @@ function Products() {
           50% { 
             transform: translateY(-20px) rotate(180deg); 
           }
+        }
+        
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out;
         }
       `}</style>
     </div>
