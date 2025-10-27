@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import CartCheckout from "./pages/CartCheckout";
 import { CartProvider } from "./components/CartContext";
 import { AuthProvider, useAuth } from "./components/AuthContext";
+import Orders from "./pages/Orders";
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -47,6 +48,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/orders"
+                  element={
+                    <ProtectedRoute>
+                      <Orders />
                     </ProtectedRoute>
                   }
                 />

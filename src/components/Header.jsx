@@ -13,11 +13,12 @@ function Header() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    setIsProfileOpen(false);
+    setIsProfileOpen(false); // Close profile dropdown when menu toggles
   };
 
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
+    setIsMenuOpen(false); // Close main menu when profile toggles
   };
 
   return (
@@ -112,15 +113,18 @@ function Header() {
                   >
                     My Profile
                   </Link>
-                  {/* <Link
+                  <Link
                     to="/orders"
                     className="block px-4 py-2 text-gray-800 hover:bg-green-50 hover:text-milkvilla-green"
-                    onClick={() => }
+                    onClick={() => setIsProfileOpen(false)} // Fixed empty onClick
                   >
                     All Orders
-                  </Link> */}
+                  </Link>
                   <button
-                    onClick={logout}
+                    onClick={() => {
+                      logout();
+                      setIsProfileOpen(false);
+                    }}
                     className="w-full text-left px-4 py-2 text-gray-800 hover:bg-green-50 hover:text-milkvilla-green flex items-center gap-2"
                   >
                     <LogOut size={16} />
@@ -217,8 +221,18 @@ function Header() {
                   >
                     My Profile
                   </Link>
+                  <Link
+                    to="/orders"
+                    className="text-base font-medium hover:text-green-200 transition-colors duration-300"
+                    onClick={toggleMenu}
+                  >
+                    All Orders
+                  </Link>
                   <button
-                    onClick={logout}
+                    onClick={() => {
+                      logout();
+                      toggleMenu();
+                    }}
                     className="text-base font-medium hover:text-green-200 transition-colors duration-300 flex items-center gap-2"
                   >
                     <LogOut size={16} />
@@ -249,8 +263,18 @@ function Header() {
               >
                 My Profile
               </Link>
+              <Link
+                to="/orders"
+                className="text-base font-medium hover:text-green-200 transition-colors duration-300"
+                onClick={() => setIsProfileOpen(false)}
+              >
+                All Orders
+              </Link>
               <button
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  setIsProfileOpen(false);
+                }}
                 className="text-base font-medium hover:text-green-200 transition-colors duration-300 flex items-center gap-2"
               >
                 <LogOut size={16} />

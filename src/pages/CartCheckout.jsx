@@ -34,7 +34,7 @@ function CartCheckout() {
     getCartSubtotal,
     getTotalSavings,
   } = useCart();
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, addOrder } = useAuth();
 
   const [showCheckout, setShowCheckout] = useState(false);
   const [step, setStep] = useState(isLoggedIn ? 2 : 1); // Start at Payment for logged-in users
@@ -100,8 +100,25 @@ function CartCheckout() {
       alert("Invalid coupon code");
     }
   };
-
   const placeOrder = () => {
+    const order = {
+      orderNumber: `FD${Date.now().toString().slice(-8)}`,
+      date: new Date().toISOString(),
+      total: total,
+      items: cartItems,
+      deliveryAddress: {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        landmark: formData.landmark,
+        city: formData.city,
+        pincode: formData.pincode,
+      },
+      paymentMethod: formData.paymentMethod,
+      status: "Pending", // Initial status
+    };
+    addOrder(order); // Save to AuthContext
     setOrderPlaced(true);
     clearCart();
   };

@@ -13,61 +13,68 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
-  // Load user from localStorage on mount (for persistence)
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const [orders, setOrders] = useState([]);
 
   const login = (mobile, otp) => {
-    // Simulated OTP verification (replace with real SMS API)
-    if (otp === "123456") {
-      // Example OTP
-      const userData = JSON.parse(localStorage.getItem("user") || "{}");
-      if (userData.mobile === mobile) {
-        setIsLoggedIn(true);
-        setUser(userData);
-        return true;
-      }
-      alert("User not found. Please register.");
-      return false;
+    if (mobile === "+919876543210" && otp === "123456") {
+      setIsLoggedIn(true);
+      setUser({
+        mobile,
+        name: "John Doe",
+        email: "john@example.com",
+        address: "123 Dairy Lane",
+        landmark: "Near Milk Farm",
+        pincode: "713101",
+      });
+      return true;
     }
-    alert("Invalid OTP");
+    alert("Invalid mobile or OTP");
     return false;
   };
 
   const register = (userData, otp) => {
-    // Simulated OTP verification (replace with real SMS API)
     if (otp === "123456") {
-      // Example OTP
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
+      // Simulate OTP verification
       setIsLoggedIn(true);
+      setUser({
+        mobile: userData.mobile,
+        name: userData.fullName || "New User",
+        email: userData.email || "",
+        address: userData.address || "",
+        landmark: userData.landmark || "",
+        pincode: userData.pincode || "",
+      });
       return true;
     }
     alert("Invalid OTP");
     return false;
   };
 
-  const updateProfile = (updatedData) => {
-    const newUserData = { ...user, ...updatedData };
-    setUser(newUserData);
-    localStorage.setItem("user", JSON.stringify(newUserData));
-  };
-
   const logout = () => {
     setIsLoggedIn(false);
     setUser(null);
-    localStorage.removeItem("user");
+  };
+
+  const updateProfile = (updatedData) => {
+    setUser({ ...user, ...updatedData });
+  };
+
+  const addOrder = (order) => {
+    setOrders([...orders, order]);
   };
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, user, login, register, updateProfile, logout }}
+      value={{
+        isLoggedIn,
+        user,
+        login,
+        register,
+        logout,
+        updateProfile,
+        orders,
+        addOrder,
+      }}
     >
       {children}
     </AuthContext.Provider>
