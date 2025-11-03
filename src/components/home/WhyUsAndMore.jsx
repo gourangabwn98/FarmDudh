@@ -14,8 +14,10 @@ import {
   Shield,
   Clock,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function WhyUsAndMore() {
+  const navigate = useNavigate();
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
   const testimonials = [
     {
@@ -592,7 +594,7 @@ function WhyUsAndMore() {
               />
             </button>
             <button
-              onClick={() => alert("Contact us")}
+              onClick={() => navigate("/contact")}
               className="bg-transparent border-2 border-white text-white py-5 px-12 rounded-full hover:bg-white/10 shadow-xl text-xl font-bold transition-all duration-300"
             >
               Contact Us

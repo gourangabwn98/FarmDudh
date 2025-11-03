@@ -1,3 +1,4 @@
+// src/pages/Contact.jsx  (Rename from News.jsx to Contact.jsx or keep as is)
 import React, { useState } from "react";
 import {
   MapPin,
@@ -10,8 +11,10 @@ import {
   MessageSquare,
   CheckCircle,
 } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function News() {
+function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,22 +23,63 @@ function News() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
+
+    // Basic validation
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.subject ||
+      !formData.message
+    ) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to send message");
+      }
+
+      const data = await res.json();
+      toast.success(data.message || "Message sent successfully!");
+      setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-    }, 3000);
+
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -58,7 +102,7 @@ function News() {
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <span className="inline-block bg-white/20 backdrop-blur-md text-white px-6 py-2 rounded-full text-sm font-bold mb-6">
-            📞 GET IN TOUCH
+            GET IN TOUCH
           </span>
           <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
             Contact FarmDudh
@@ -132,7 +176,7 @@ function News() {
             <div>
               <div className="mb-8">
                 <span className="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
-                  💬 SEND MESSAGE
+                  SEND MESSAGE
                 </span>
                 <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
                   Get In Touch
@@ -157,7 +201,7 @@ function News() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label className="block text-gray-700 font-semibold mb-2">
                       Your Name *
@@ -173,6 +217,7 @@ function News() {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Enter your name"
+                        required
                         className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:outline-none transition-all duration-300"
                       />
                     </div>
@@ -194,6 +239,7 @@ function News() {
                           value={formData.email}
                           onChange={handleChange}
                           placeholder="your@email.com"
+                          required
                           className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:outline-none transition-all duration-300"
                         />
                       </div>
@@ -214,6 +260,7 @@ function News() {
                           value={formData.phone}
                           onChange={handleChange}
                           placeholder="+91 91256 33633"
+                          required
                           className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:outline-none transition-all duration-300"
                         />
                       </div>
@@ -235,6 +282,7 @@ function News() {
                         value={formData.subject}
                         onChange={handleChange}
                         placeholder="What is this about?"
+                        required
                         className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:outline-none transition-all duration-300"
                       />
                     </div>
@@ -255,19 +303,29 @@ function News() {
                         onChange={handleChange}
                         rows={5}
                         placeholder="Tell us more about your inquiry..."
+                        required
                         className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:outline-none transition-all duration-300 resize-none"
                       />
                     </div>
                   </div>
 
                   <button
-                    onClick={handleSubmit}
-                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 px-8 rounded-xl hover:from-green-700 hover:to-emerald-700 shadow-lg font-bold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={loading}
+                    className={`w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 px-8 rounded-xl hover:from-green-700 hover:to-emerald-700 shadow-lg font-bold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 ${
+                      loading ? "opacity-80 cursor-not-allowed" : ""
+                    }`}
                   >
-                    <Send size={20} />
-                    Send Message
+                    {loading ? (
+                      <>Sending...</>
+                    ) : (
+                      <>
+                        <Send size={20} />
+                        Send Message
+                      </>
+                    )}
                   </button>
-                </div>
+                </form>
               )}
             </div>
 
@@ -275,7 +333,7 @@ function News() {
             <div className="space-y-6">
               <div>
                 <span className="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
-                  📍 FIND US
+                  FIND US
                 </span>
                 <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
                   Our Location
@@ -359,4 +417,4 @@ function News() {
   );
 }
 
-export default News;
+export default Contact;

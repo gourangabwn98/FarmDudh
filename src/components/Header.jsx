@@ -10,6 +10,7 @@ function Header() {
   const { getCartCount } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
   const cartCount = getCartCount();
+  console.log("user", user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -102,7 +103,7 @@ function Header() {
                 aria-label="Profile"
               >
                 <User size={24} />
-                <span>{user?.name || "Profile"}</span>
+                <span>{user?.fullName || "Profile"}</span>
               </button>
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">

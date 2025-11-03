@@ -1,4 +1,5 @@
-import React from "react";
+// src/pages/Orders.jsx
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Package,
@@ -7,22 +8,56 @@ import {
   CreditCard,
   ShoppingCart,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
-import { useAuth } from "../components/AuthContext";
+import { toast } from "react-toastify";
 
 function Orders() {
-  const { isLoggedIn, orders } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Sort orders by date (recent first)
+  const token = localStorage.getItem("token");
+
+  // FETCH ORDERS FROM API
+  useEffect(() => {
+    if (!token) {
+      navigate("/login?redirect=orders");
+      return;
+    }
+
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/orders", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Failed to load orders");
+        const data = await res.json();
+        setOrders(data);
+      } catch (err) {
+        toast.error(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [token, navigate]);
+
+  // Sort recent first
   const sortedOrders = [...orders].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
+    (a, b) => new Date(b.orderedAt) - new Date(a.orderedAt)
   );
 
-  // If not logged in, redirect to login
-  if (!isLoggedIn) {
-    navigate("/login?redirect=orders");
-    return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading your orders...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -61,7 +96,7 @@ function Orders() {
               </p>
               <Link
                 to="/products"
-                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-8 rounded-full font-bold hover:scale-105 transition-all duration-300"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-8 rounded-full font-bold hover:scale-105 transition-all duration-300 inline-block"
               >
                 Browse Products
               </Link>
@@ -70,17 +105,17 @@ function Orders() {
             <div className="space-y-6">
               {sortedOrders.map((order) => (
                 <div
-                  key={order.orderNumber}
+                  key={order._id}
                   className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
                     <div>
                       <h3 className="text-xl font-bold text-gray-900">
-                        Order #{order.orderNumber}
+                        Order #{order._id.toString().slice(-6)}
                       </h3>
-                      <p className="text-sm text-gray-500">
-                        Placed on{" "}
-                        {new Date(order.date).toLocaleDateString("en-IN", {
+                      <p className="text-sm text-gray-500 flex items-center gap-1">
+                        <Clock size={16} />
+                        {new Date(order.orderedAt).toLocaleDateString("en-IN", {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
@@ -90,89 +125,68 @@ function Orders() {
                       </p>
                     </div>
                     <span
-                      className={`text-sm font-semibold px-3 py-1 rounded-full ${
-                        order.status === "Delivered"
+                      className={`text-sm font-semibold px-3 py-1 rounded-full capitalize ${
+                        order.status === "delivered"
                           ? "bg-green-100 text-green-600"
-                          : "bg-yellow-100 text-yellow-600"
+                          : order.status === "pending"
+                          ? "bg-yellow-100 text-yellow-600"
+                          : "bg-blue-100 text-blue-600"
                       }`}
                     >
                       {order.status}
                     </span>
                   </div>
 
-                  {/* Order Items */}
+                  {/* Items */}
                   <div className="mb-4">
                     <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
                       <Package size={20} className="text-milkvilla-green" />
                       Items ({order.items.length})
                     </h4>
-                    <div className="space-y-2">
-                      {order.items.map((item) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {order.items.map((item, i) => (
                         <div
-                          key={item.id}
-                          className="flex justify-between text-gray-700"
+                          key={i}
+                          className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg"
                         >
-                          <span>
-                            {item.name} × {item.quantity}
-                          </span>
-                          <span className="font-semibold">
-                            ₹
-                            {(
-                              (item.price -
-                                (item.price * item.discount) / 100) *
-                              item.quantity
-                            ).toFixed(0)}
-                          </span>
+                          <img
+                            src={item.img}
+                            alt={item.name}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <div className="flex-1">
+                            <p className="font-medium text-sm">{item.name}</p>
+                            <p className="text-xs text-gray-500">
+                              {item.quantity} × ₹{item.price}/{item.unit}
+                            </p>
+                          </div>
+                          <p className="font-bold text-green-600">
+                            ₹{(item.price * item.quantity).toFixed(0)}
+                          </p>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Delivery Address */}
+                  {/* Address */}
                   <div className="mb-4">
                     <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
                       <MapPin size={20} className="text-milkvilla-green" />
                       Delivery Address
                     </h4>
-                    <div className="text-gray-700 text-sm">
-                      <p className="font-semibold">
-                        {order.deliveryAddress.fullName}
-                      </p>
-                      <p>{order.deliveryAddress.address}</p>
-                      <p>
-                        {order.deliveryAddress.landmark &&
-                          `Near ${order.deliveryAddress.landmark}, `}
-                        {order.deliveryAddress.city},{" "}
-                        {order.deliveryAddress.pincode}
-                      </p>
-                      <p>{order.deliveryAddress.phone}</p>
-                      {order.deliveryAddress.email && (
-                        <p>{order.deliveryAddress.email}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Payment Method */}
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                      <CreditCard size={20} className="text-milkvilla-green" />
-                      Payment Method
-                    </h4>
-                    <p className="text-gray-700">
-                      {order.paymentMethod === "cod" && "Cash on Delivery"}
-                      {order.paymentMethod === "upi" && "UPI Payment"}
-                      {order.paymentMethod === "card" && "Credit/Debit Card"}
-                      {order.paymentMethod === "netbanking" && "Net Banking"}
+                    <p className="text-gray-700 text-sm">
+                      {order.deliveryAddress || "Default address"}
+                      {order.pincode && `, ${order.pincode}`}
                     </p>
                   </div>
 
                   {/* Total */}
-                  <div className="flex justify-between items-center border-t-2 border-gray-200 pt-4">
+                  <div className="flex justify-between items-center border-t-2 border-dashed border-gray-200 pt-4">
                     <span className="text-lg font-bold text-gray-900">
-                      Total
+                      Total Paid
                     </span>
-                    <span className="text-xl font-bold text-milkvilla-green">
-                      ₹{order.total.toFixed(0)}
+                    <span className="text-2xl font-bold text-milkvilla-green">
+                      ₹{order.totalAmount.toFixed(0)}
                     </span>
                   </div>
                 </div>

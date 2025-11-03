@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// src/pages/Products.jsx
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Star,
@@ -13,138 +14,41 @@ import {
   Clock,
   Shield,
   Search,
+  Loader2,
   CheckCircle,
 } from "lucide-react";
-import { useCart } from "../components/CartContext";
-// import { useCart } from "./CartContext";
+import { useCart } from "../components/CartContext"; // <-- Make sure path is correct
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Products() {
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart } = useCart(); // <-- ONLY THIS! No duplicate API call
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState([]);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
 
-  const products = [
-    {
-      id: 1,
-      name: "A2 Desi Cow Milk",
-      category: "milk",
-      desc: "Fresh from Purba Burdwan's free-grazing desi cows, rich in A2 protein and nutrients.",
-      img: "/assets/images/a2milk.webp",
-      price: 80,
-      unit: "liter",
-      rating: 4.9,
-      reviews: 156,
-      badge: "Best Seller",
-      features: [
-        "100% Pure A2",
-        "Unprocessed",
-        "10-Min Delivery",
-        "Zero Additives",
-      ],
-      discount: 10,
-    },
-    {
-      id: 2,
-      name: "Buffalo Milk",
-      category: "milk",
-      desc: "Creamy, high-fat milk from healthy buffaloes, perfect for making rich dairy products.",
-      img: "/assets/images/BUFFALO MILK.png",
-      price: 70,
-      unit: "liter",
-      rating: 4.8,
-      reviews: 98,
-      badge: "Rich & Creamy",
-      features: [
-        "High Fat Content",
-        "Locally Sourced",
-        "Fresh Daily",
-        "Premium Quality",
-      ],
-      discount: 10,
-    },
-    {
-      id: 3,
-      name: "A2 Cow Ghee",
-      category: "ghee",
-      desc: "Hand-churned using traditional bilona method, packed with flavor and health benefits.",
-      img: "/assets/images/ghee.webp",
-      price: 650,
-      unit: "500g",
-      rating: 5.0,
-      reviews: 234,
-      badge: "Premium",
-      features: [
-        "Bilona Method",
-        "Traditional Recipe",
-        "Rich Aroma",
-        "Pure A2",
-      ],
-      discount: 10,
-    },
-    {
-      id: 4,
-      name: "Fresh Paneer",
-      category: "dairy",
-      desc: "Soft, homemade paneer crafted daily from pure milk, perfect for cooking.",
-      img: "/assets/images/paneer.jpg",
-      price: 90,
-      unit: "250g",
-      rating: 4.7,
-      reviews: 87,
-      badge: "Daily Fresh",
-      features: [
-        "Made Fresh",
-        "Soft Texture",
-        "High Protein",
-        "No Preservatives",
-      ],
-      discount: 10,
-    },
-    {
-      id: 5,
-      name: "Creamy Dahi",
-      category: "dairy",
-      desc: "Rich, probiotic-packed curd made traditionally, perfect for digestion.",
-      img: "/assets/images/dahi.jpeg",
-      price: 50,
-      unit: "500g",
-      rating: 4.8,
-      reviews: 143,
-      badge: "Probiotic Rich",
-      features: [
-        "Probiotic",
-        "Traditional Method",
-        "Fresh Culture",
-        "Creamy Texture",
-      ],
-      discount: 10,
-    },
-    {
-      id: 6,
-      name: "Organic Buttermilk",
-      category: "dairy",
-      desc: "Refreshing and healthy buttermilk made from pure dahi, aids digestion.",
-      img: "/assets/images/dahi.jpeg",
-      price: 30,
-      unit: "500ml",
-      rating: 4.6,
-      reviews: 76,
-      badge: "Healthy",
-      features: ["Digestive", "Low Calorie", "Refreshing", "Natural"],
-      discount: 10,
-    },
-  ];
-
-  const categories = [
-    { id: "all", name: "All Products", Icon: Package },
-    { id: "milk", name: "Milk", Icon: Leaf },
-    { id: "ghee", name: "Ghee", Icon: Award },
-    { id: "dairy", name: "Dairy Products", Icon: Star },
-  ];
+  // FETCH PRODUCTS FROM API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/products");
+        if (!res.ok) throw new Error("Failed to load products");
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+        toast.error("Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const toggleFavorite = (productId) => {
     setFavorites((prev) =>
@@ -154,11 +58,15 @@ function Products() {
     );
   };
 
+  // ADD TO CART — ONLY VIA CONTEXT
   const handleAddToCart = (product) => {
-    addToCart(product);
-    setToastMessage(`${product.name} added to cart!`);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login to add to cart");
+      navigate("/login?redirect=products");
+      return;
+    }
+    addToCart(product); // ← This calls API once via CartContext
   };
 
   const filteredProducts = products.filter((product) => {
@@ -170,19 +78,47 @@ function Products() {
     return matchesCategory && matchesSearch;
   });
 
-  const finalPrice = (price, discount) => {
-    return price - (price * discount) / 100;
-  };
+  const finalPrice = (price, discount) =>
+    (price - (price * discount) / 100).toFixed(0);
+
+  const categories = [
+    { id: "all", name: "All Products", Icon: Package },
+    { id: "milk", name: "Milk", Icon: Leaf },
+    { id: "ghee", name: "Ghee", Icon: Award },
+    { id: "dairy", name: "Dairy Products", Icon: Star },
+  ];
+
+  // LOADING STATE
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-green-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading fresh products...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-red-50">
+        <div className="text-center">
+          <p className="text-red-600 text-xl">⚠️ {error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-2 bg-green-600 text-white rounded-full"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50">
-      {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed top-24 right-4 z-50 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-slideIn">
-          <CheckCircle size={24} />
-          <span className="font-semibold">{toastMessage}</span>
-        </div>
-      )}
+      <ToastContainer position="top-right" autoClose={3000} />
 
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 py-20 overflow-hidden">
@@ -220,7 +156,6 @@ function Products() {
               delivered with care.
             </p>
 
-            {/* Trust Indicators */}
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               {[
                 { Icon: Shield, text: "FSSAI Certified" },
@@ -238,7 +173,6 @@ function Products() {
               ))}
             </div>
 
-            {/* Special Offer Banner */}
             <div className="inline-flex items-center gap-3 bg-yellow-400 text-gray-900 px-8 py-4 rounded-full font-bold text-lg shadow-2xl animate-pulse">
               <Zap className="fill-yellow-600" size={24} />
               <span>Limited Time: 10% OFF on First Order!</span>
@@ -247,11 +181,10 @@ function Products() {
         </div>
       </section>
 
-      {/* Search and Filter Section */}
+      {/* Search and Filter */}
       <section className="py-8 bg-white border-b border-gray-200 sticky top-16 z-40 shadow-md">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search Bar */}
             <div className="relative w-full md:w-96">
               <Search
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -266,7 +199,6 @@ function Products() {
               />
             </div>
 
-            {/* Category Filters */}
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
               {categories.map((cat) => (
                 <button
@@ -290,7 +222,6 @@ function Products() {
       {/* Products Grid */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          {/* Results Count */}
           <div className="mb-8 flex justify-between items-center">
             <p className="text-gray-600 font-semibold">
               Showing {filteredProducts.length} products
@@ -304,38 +235,35 @@ function Products() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProducts.map((product) => (
               <div
-                key={product.id}
+                key={product._id}
                 className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:-translate-y-2 border border-gray-100"
               >
-                {/* Product Image */}
                 <div className="relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50 h-64">
                   <img
                     src={product.img}
                     alt={product.name}
                     className="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
                   />
 
-                  {/* Badge */}
                   <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg">
-                    {product.badge}
+                    {product.badge || "Premium"}
                   </div>
 
-                  {/* Discount Badge */}
                   {product.discount > 0 && (
                     <div className="absolute top-4 right-4 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                       {product.discount}% OFF
                     </div>
                   )}
 
-                  {/* Favorite Button */}
                   <button
-                    onClick={() => toggleFavorite(product.id)}
+                    onClick={() => toggleFavorite(product._id)}
                     className="absolute bottom-4 right-4 bg-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform duration-300"
                   >
                     <Heart
                       size={20}
                       className={`${
-                        favorites.includes(product.id)
+                        favorites.includes(product._id)
                           ? "fill-red-500 text-red-500"
                           : "text-gray-400"
                       }`}
@@ -343,9 +271,7 @@ function Products() {
                   </button>
                 </div>
 
-                {/* Product Details */}
                 <div className="p-6">
-                  {/* Rating */}
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
@@ -353,7 +279,7 @@ function Products() {
                           key={i}
                           size={16}
                           className={`${
-                            i < Math.floor(product.rating)
+                            i < Math.floor(product.rating || 5)
                               ? "text-yellow-400 fill-yellow-400"
                               : "text-gray-300"
                           }`}
@@ -361,26 +287,23 @@ function Products() {
                       ))}
                     </div>
                     <span className="text-sm font-bold text-gray-700">
-                      {product.rating}
+                      {product.rating || 5.0}
                     </span>
                     <span className="text-sm text-gray-500">
-                      ({product.reviews} reviews)
+                      ({product.reviews || 0} reviews)
                     </span>
                   </div>
 
-                  {/* Product Name */}
                   <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors duration-300">
                     {product.name}
                   </h3>
 
-                  {/* Description */}
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                     {product.desc}
                   </p>
 
-                  {/* Features */}
                   <div className="grid grid-cols-2 gap-2 mb-4">
-                    {product.features.slice(0, 4).map((feature, i) => (
+                    {(product.features || []).slice(0, 4).map((feature, i) => (
                       <div
                         key={i}
                         className="flex items-center gap-1 text-xs text-gray-600"
@@ -394,10 +317,9 @@ function Products() {
                     ))}
                   </div>
 
-                  {/* Price */}
                   <div className="flex items-baseline gap-2 mb-4">
                     <span className="text-3xl font-extrabold text-green-600">
-                      ₹{finalPrice(product.price, product.discount)}
+                      ₹{finalPrice(product.price, product.discount || 0)}
                     </span>
                     {product.discount > 0 && (
                       <span className="text-lg text-gray-400 line-through">
@@ -409,7 +331,6 @@ function Products() {
                     </span>
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex gap-3">
                     <button
                       onClick={() => handleAddToCart(product)}
@@ -427,7 +348,6 @@ function Products() {
             ))}
           </div>
 
-          {/* No Results Message */}
           {filteredProducts.length === 0 && (
             <div className="text-center py-20">
               <div className="text-6xl mb-4">🔍</div>
@@ -442,7 +362,7 @@ function Products() {
         </div>
       </section>
 
-      {/* View Cart Button (Sticky) */}
+      {/* View Cart Button */}
       <button
         onClick={() => navigate("/cart")}
         className="fixed bottom-6 right-6 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-4 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center gap-2 font-bold z-40"
@@ -451,29 +371,15 @@ function Products() {
         View Cart
       </button>
 
-      <style>{`
+      <style jsx>{`
         @keyframes float {
-          0%, 100% { 
-            transform: translateY(0) rotate(0deg); 
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg);
           }
-          50% { 
-            transform: translateY(-20px) rotate(180deg); 
+          50% {
+            transform: translateY(-20px) rotate(180deg);
           }
-        }
-        
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        .animate-slideIn {
-          animation: slideIn 0.3s ease-out;
         }
       `}</style>
     </div>

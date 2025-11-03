@@ -17,8 +17,9 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import CartCheckout from "./pages/CartCheckout";
 import { CartProvider } from "./components/CartContext";
-import { AuthProvider, useAuth } from "./components/AuthContext";
+// import { AuthProvider, useAuth } from "./components/AuthContext";
 import Orders from "./pages/Orders";
+import { AuthProvider, useAuth } from "./components/AuthContext";
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
