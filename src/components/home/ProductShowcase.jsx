@@ -14,6 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ProductShowcase() {
+  const backend_api_base = process.env.REACT_APP_API_BASE;
   const { addToCart: contextAddToCart } = useCart(); // optional fallback
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ function ProductShowcase() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch(`${backend_api_base}/products`);
         if (!res.ok) throw new Error("Failed to load products");
         const data = await res.json();
         setProducts(data);

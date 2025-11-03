@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../components/AuthContext";
 
 function Login() {
+  const backend_api_base = process.env.REACT_APP_API_BASE;
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -41,14 +42,11 @@ function Login() {
     setIsLoading(true);
     try {
       // 1. Check if mobile exists
-      const checkRes = await fetch(
-        "http://localhost:5000/api/auth/check-mobile",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mobile }),
-        }
-      );
+      const checkRes = await fetch(`${backend_api_base}/auth/check-mobile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile }),
+      });
       const checkData = await checkRes.json();
       if (!checkRes.ok) throw new Error(checkData.error || "Check failed");
 
@@ -61,7 +59,7 @@ function Login() {
       }
 
       // 2. Send OTP
-      const otpRes = await fetch("http://localhost:5000/api/auth/send-otp", {
+      const otpRes = await fetch(`${backend_api_base}/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mobile }),
@@ -86,7 +84,7 @@ function Login() {
     }
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+      const res = await fetch(`${backend_api_base}/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mobile, otp: otp.trim(), isRegister: false }),

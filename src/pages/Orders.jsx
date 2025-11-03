@@ -13,6 +13,7 @@ import {
 import { toast } from "react-toastify";
 
 function Orders() {
+  const backend_api_base = process.env.REACT_APP_API_BASE;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function Orders() {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/orders", {
+        const res = await fetch(`${backend_api_base}/orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to load orders");

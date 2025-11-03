@@ -10,7 +10,7 @@ export const useCart = () => {
   return context;
 };
 
-const API_BASE = "http://localhost:5000/api";
+const backend_api_base = process.env.REACT_APP_API_BASE;
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -27,7 +27,7 @@ export const CartProvider = ({ children }) => {
     }
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/cart`, {
+      const res = await fetch(`${backend_api_base}/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -65,7 +65,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product) => {
     if (!token) return toast.error("Please login to add to cart");
     try {
-      const res = await fetch(`${API_BASE}/cart`, {
+      const res = await fetch(`${backend_api_base}/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     if (!token) return;
     try {
-      await fetch(`${API_BASE}/cart/${productId}`, {
+      await fetch(`${backend_api_base}/cart/${productId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -107,7 +107,7 @@ export const CartProvider = ({ children }) => {
     );
 
     try {
-      await fetch(`${API_BASE}/cart`, {
+      await fetch(`${backend_api_base}/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +126,7 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
     if (token) {
       try {
-        await fetch(`${API_BASE}/cart`, {
+        await fetch(`${backend_api_base}/cart`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -144,7 +144,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/orders`, {
+      const res = await fetch(`${backend_api_base}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

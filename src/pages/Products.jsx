@@ -22,6 +22,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Products() {
+  const backend_api_base = process.env.REACT_APP_API_BASE;
   const navigate = useNavigate();
   const { addToCart } = useCart(); // <-- ONLY THIS! No duplicate API call
 
@@ -36,7 +37,7 @@ function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch(`${backend_api_base}/products`);
         if (!res.ok) throw new Error("Failed to load products");
         const data = await res.json();
         setProducts(data);

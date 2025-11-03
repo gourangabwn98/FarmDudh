@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
+  const backend_api_base = process.env.REACT_APP_API_BASE;
   const [formData, setFormData] = useState({
     mobile: "",
     fullName: "",
@@ -214,14 +215,11 @@ function Register() {
 
     try {
       // 1. Check if mobile already exists
-      const checkRes = await fetch(
-        "http://localhost:5000/api/auth/check-mobile",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mobile: formData.mobile }),
-        }
-      );
+      const checkRes = await fetch(`${backend_api_base}/auth/check-mobile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile: formData.mobile }),
+      });
 
       const checkData = await checkRes.json();
 
@@ -243,7 +241,7 @@ function Register() {
       }
 
       // 2. Send OTP
-      const otpRes = await fetch("http://localhost:5000/api/auth/send-otp", {
+      const otpRes = await fetch(`${backend_api_base}/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mobile: formData.mobile }),
@@ -276,29 +274,26 @@ function Register() {
     navigate("/");
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/verify-otp",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            mobile: formData.mobile,
-            otp: otp.trim(),
-            isRegister: true,
-            formData: {
-              fullName: formData.fullName,
-              email: formData.email,
-              address: formData.address,
-              landmark: formData.landmark,
-              pincode: formData.pincode,
-              dateOfBirth: formData.dateOfBirth,
-              customerType: formData.customerType,
-              shopName: formData.shopName,
-              shopImage: formData.shopImage,
-            },
-          }),
-        }
-      );
+      const response = await fetch(`${backend_api_base}/auth/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mobile: formData.mobile,
+          otp: otp.trim(),
+          isRegister: true,
+          formData: {
+            fullName: formData.fullName,
+            email: formData.email,
+            address: formData.address,
+            landmark: formData.landmark,
+            pincode: formData.pincode,
+            dateOfBirth: formData.dateOfBirth,
+            customerType: formData.customerType,
+            shopName: formData.shopName,
+            shopImage: formData.shopImage,
+          },
+        }),
+      });
 
       const data = await response.json();
       console.log("data is ", data);
