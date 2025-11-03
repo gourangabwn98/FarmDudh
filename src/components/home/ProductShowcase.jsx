@@ -88,47 +88,6 @@ function ProductShowcase() {
     setCurrentProductIndex((prev) => (prev + 1) % totalProductSlides);
   };
 
-  // === ADD TO CART VIA API ===
-  // const addToCartAPI = async (product) => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     toast.error("Please login to add to cart");
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/cart", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       body: JSON.stringify({
-  //         productId: product._id,
-  //         quantity: 1,
-  //       }),
-  //     });
-
-  //     if (!res.ok) {
-  //       const err = await res.json();
-  //       throw new Error(err.error || "Failed to add to cart");
-  //     }
-
-  //     const cart = await res.json();
-  //     toast.success(`${product.name} added to cart!`);
-
-  //     // Optional: Update context
-  //     if (contextAddToCart) {
-  //       contextAddToCart({
-  //         ...product,
-  //         quantity: 1,
-  //         priceDisplay: `₹${product.price}/${product.unit}`,
-  //       });
-  //     }
-  //   } catch (err) {
-  //     toast.error(err.message);
-  //   }
-  // };
   const handleAddToCart = (product) => {
     addToCart(product); // ← This will call API via context
   };
