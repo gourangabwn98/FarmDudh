@@ -37,7 +37,10 @@ function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${backend_api_base}/products`);
+        // const res = await fetch(`${backend_api_base}/products`);
+        const res = await fetch(
+          "https://dairydudh-backend.onrender.com/api/products"
+        );
         if (!res.ok) throw new Error("Failed to load products");
         const data = await res.json();
         setProducts(data);
