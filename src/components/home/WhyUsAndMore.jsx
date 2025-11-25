@@ -22,7 +22,7 @@ function WhyUsAndMore() {
   const testimonials = [
     {
       name: "Arjun Das",
-      text: "FarmDudh's A2 milk is pure bliss! Fresh from local farmers, delivered in minutes.",
+      text: "Malati Dairy's A2 milk is pure bliss! Fresh from local farmers, delivered in minutes.",
       time: "Just now",
       avatar: "/assets/images/dp.jpeg",
       rating: 5,
@@ -36,7 +36,7 @@ function WhyUsAndMore() {
     },
     {
       name: "Suman Banerjee",
-      text: "FarmDudh brings the taste of tradition to my home. Pure A2 milk every day!",
+      text: "Malati Dairy brings the taste of tradition to my home. Pure A2 milk every day!",
       time: "2 days ago",
       avatar: "/assets/images/dp.jpeg",
       rating: 5,
@@ -47,7 +47,7 @@ function WhyUsAndMore() {
     {
       title: "Unprocessed A2 Milk",
       desc: "Pure, natural milk from Purba Burdwan's desi cows, free from additives.",
-      img: "/assets/images/a2milk.webp",
+      img: "/assets/images/A2milk.webp",
       Icon: CheckCircle,
       color: "from-green-500 to-emerald-500",
     },
@@ -81,7 +81,7 @@ function WhyUsAndMore() {
     },
     {
       title: "10-Minute Delivery",
-      desc: "Fresh dairy delivered to your doorstep in Purba Burdwan within 10 minutes.",
+      desc: "Fresh dairy delivered to your doorstep in Purba Burdwan within 30 minutes.",
       img: "/assets/images/delivery.png",
       Icon: Zap,
       color: "from-yellow-500 to-amber-500",
@@ -164,7 +164,7 @@ function WhyUsAndMore() {
               {
                 Icon: Truck,
                 title: "Fast Delivery",
-                desc: "Delivered fresh to your doorstep in Purba Burdwan within 10 minutes, ensuring maximum freshness.",
+                desc: "Delivered fresh to your doorstep in Purba Burdwan within 30 minutes, ensuring maximum freshness.",
                 color: "from-orange-400 to-red-500",
                 delay: "0.6s",
               },
@@ -212,10 +212,10 @@ function WhyUsAndMore() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <span className="inline-block bg-green-100 text-green-700 px-6 py-2 rounded-full text-sm font-bold mb-4 animate-pulse">
-              💚 WHY FARMDUDH
+              💚 WHY Malati Dairy
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent mb-4">
-              6 Reasons to Choose FarmDudh
+              6 Reasons to Choose Malati Dairy
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               We're not just delivering dairy, we're delivering trust, health,
@@ -287,7 +287,7 @@ function WhyUsAndMore() {
               Delivering Trust, Quality & Freshness
             </h2>
             <p className="text-green-100 text-lg max-w-2xl mx-auto">
-              Join thousands of happy families who trust FarmDudh for their
+              Join thousands of happy families who trust Malati Dairy for their
               daily dairy needs
             </p>
           </div>
@@ -457,7 +457,7 @@ function WhyUsAndMore() {
                 Burdwan
               </h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                At FarmDudh, we're more than a dairy company – we're
+                At Malati Dairy, we're more than a dairy company – we're
                 environmental stewards. Our zero-plastic initiative and support
                 for local farmers create a sustainable ecosystem that benefits
                 everyone.
@@ -518,7 +518,7 @@ function WhyUsAndMore() {
               },
               {
                 q: "How fast is delivery in Purba Burdwan?",
-                a: "We deliver fresh dairy within 10 minutes in Purba Burdwan using our fleet of eco-friendly delivery carts. Our hyperlocal model ensures your milk is farm-fresh when it reaches your doorstep.",
+                a: "We deliver fresh dairy within 30 minutes in Purba Burdwan using our fleet of eco-friendly delivery carts. Our hyperlocal model ensures your milk is farm-fresh when it reaches your doorstep.",
               },
               {
                 q: "Is your packaging really eco-friendly?",
@@ -579,7 +579,7 @@ function WhyUsAndMore() {
             Ready to Experience Pure Dairy?
           </h2>
           <p className="text-2xl text-green-100 mb-10 max-w-3xl mx-auto">
-            Join 2 lakh+ happy customers who trust FarmDudh for their daily
+            Join 2 lakh+ happy customers who trust Malati Dairy for their daily
             dairy needs
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">

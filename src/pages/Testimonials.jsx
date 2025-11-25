@@ -43,7 +43,7 @@ function Testimonials() {
               🌟 OUR STORY
             </span>
             <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-              About FarmDudh
+              About Malati Dairy
             </h1>
             <p className="text-xl text-green-100 leading-relaxed">
               Bringing pure, traditional A2 dairy from Purba Burdwan's local
@@ -65,7 +65,7 @@ function Testimonials() {
                 From Farm to Family
               </h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                FarmDudh was born from a simple vision: to reconnect urban
+                Malati Dairy was born from a simple vision: to reconnect urban
                 families with the pure, traditional dairy that our grandparents
                 cherished. In the heart of Purba Burdwan, we partner with local
                 farmers who raise free-grazing desi cows with love and care.
@@ -294,7 +294,7 @@ function Testimonials() {
               👥 MEET THE TEAM
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              The People Behind FarmDudh
+              The People Behind Malati Dairy
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Passionate individuals dedicated to bringing you the best dairy
@@ -347,7 +347,7 @@ function Testimonials() {
       <section className="py-20 bg-gradient-to-br from-green-100 to-emerald-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
-            Join the FarmDudh Family
+            Join the Malati Dairy Family
           </h2>
           <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
             Experience the difference of pure, traditional dairy delivered with

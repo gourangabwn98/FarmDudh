@@ -60,7 +60,7 @@ function WhyUsPage() {
             🌟 WHY CHOOSE US
           </span>
           <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
-            Why FarmDudh?
+            Why Malati Dairy?
           </h1>
           <p className="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
             Discover what makes us Purba Burdwan's most trusted dairy brand
@@ -136,7 +136,7 @@ function WhyUsPage() {
               {
                 Icon: Clock,
                 title: "10-Minute Delivery",
-                desc: "Fresh dairy delivered to your doorstep within 10 minutes across Purba Burdwan. Morning and evening deliveries available every day.",
+                desc: "Fresh dairy delivered to your doorstep within 30 minutes across Purba Burdwan. Morning and evening deliveries available every day.",
                 color: "from-yellow-500 to-amber-500",
                 benefits: [
                   "Ultra-fast delivery",
@@ -186,7 +186,7 @@ function WhyUsPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              FarmDudh vs Others
+              Malati Dairy vs Others
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               See how we stack up against regular dairy brands
@@ -196,7 +196,7 @@ function WhyUsPage() {
           <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div className="grid grid-cols-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold text-center">
               <div className="p-4 border-r border-white/20">Feature</div>
-              <div className="p-4 border-r border-white/20">FarmDudh ✓</div>
+              <div className="p-4 border-r border-white/20">Malati Dairy ✓</div>
               <div className="p-4">Others ✗</div>
             </div>
             {[
@@ -204,7 +204,7 @@ function WhyUsPage() {
               ["Source", "Local Farmers", "Unknown"],
               ["Packaging", "Steel (Reusable)", "Plastic"],
               ["Testing", "Daily", "Periodic"],
-              ["Delivery Time", "10 Minutes", "Next Day"],
+              ["Delivery Time", "30 minutes", "Next Day"],
               ["Additives", "Zero", "May Contain"],
               ["Cow Treatment", "Free Grazing", "Confined"],
               ["Certification", "FSSAI", "Varies"],
@@ -284,7 +284,7 @@ function WhyUsPage() {
             Ready to Switch to Pure Dairy?
           </h2>
           <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of families who trust FarmDudh for their daily
+            Join thousands of families who trust Malati Dairy for their daily
             nutrition
           </p>
           <button
@@ -318,8 +318,8 @@ function FAQPage({ openIndex, toggleFAQ }) {
           a: "A2 milk comes from indigenous desi cows that produce only A2 beta-casein protein. Unlike regular milk which contains A1 protein, A2 milk is easier to digest, doesn't cause bloating, and is closer to the milk our ancestors drank. It's also rich in nutrients like omega-3 fatty acids, vitamins, and minerals.",
         },
         {
-          q: "How is FarmDudh different from other milk brands?",
-          a: "FarmDudh sources 100% pure A2 milk directly from local Purba Burdwan farmers who raise free-grazing desi cows. We deliver in eco-friendly reusable steel containers within 10 minutes, test every batch daily, and never add preservatives or additives. We're FSSAI certified and committed to sustainability.",
+          q: "How is Malati Dairy different from other milk brands?",
+          a: "Malati Dairy sources 100% pure A2 milk directly from local Purba Burdwan farmers who raise free-grazing desi cows. We deliver in eco-friendly reusable steel containers within 30 minutes, test every batch daily, and never add preservatives or additives. We're FSSAI certified and committed to sustainability.",
         },
         {
           q: "Where does your milk come from?",
@@ -333,7 +333,7 @@ function FAQPage({ openIndex, toggleFAQ }) {
       questions: [
         {
           q: "How fast is your delivery in Purba Burdwan?",
-          a: "We deliver fresh dairy within 10 minutes across Purba Burdwan! Our hyperlocal model with 20+ delivery carts ensures your milk is farm-fresh when it reaches your doorstep. We have morning (6-10 AM) and evening (5-10 PM) delivery slots available every day.",
+          a: "We deliver fresh dairy within 30 minutes across Purba Burdwan! Our hyperlocal model with 20+ delivery carts ensures your milk is farm-fresh when it reaches your doorstep. We have morning (6-10 AM) and evening (5-10 PM) delivery slots available every day.",
         },
         {
           q: "What areas do you deliver to?",
@@ -366,7 +366,7 @@ function FAQPage({ openIndex, toggleFAQ }) {
           a: "Yes! We offer A2 Desi Cow Milk, Buffalo Milk, A2 Cow Ghee (bilona method), Fresh Paneer, Creamy Dahi, and Buttermilk. All products are made from pure A2 milk using traditional methods and delivered fresh daily.",
         },
         {
-          q: "How should I store FarmDudh products?",
+          q: "How should I store Malati Dairy products?",
           a: "Store milk and dairy products in the refrigerator immediately after delivery. Our milk is unprocessed, so it's best consumed within 2 days. Ghee can be stored at room temperature. Always use clean utensils to avoid contamination.",
         },
       ],
@@ -385,7 +385,7 @@ function FAQPage({ openIndex, toggleFAQ }) {
         },
         {
           q: "Do you offer bulk discounts?",
-          a: "Yes! For bulk orders (10+ liters daily or events/functions), we offer special pricing. Contact our bulk order team at +91 77972 33633 or email bulk@farmdudh.com for custom quotes.",
+          a: "Yes! For bulk orders (10+ liters daily or events/functions), we offer special pricing. Contact our bulk order team at +91 77972 33633 or email bulk@Malatidairy.com for custom quotes.",
         },
       ],
     },
@@ -439,7 +439,8 @@ function FAQPage({ openIndex, toggleFAQ }) {
             Frequently Asked Questions
           </h1>
           <p className="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
-            Find answers to common questions about FarmDudh's A2 dairy products
+            Find answers to common questions about Malati Dairy's A2 dairy
+            products
           </p>
         </div>
       </section>
@@ -526,7 +527,7 @@ function FAQPage({ openIndex, toggleFAQ }) {
               onClick={() => alert("Email us")}
               className="bg-transparent border-2 border-white text-white py-4 px-10 rounded-full hover:bg-white/10 shadow-xl text-lg font-bold transition-all duration-300"
             >
-              ✉️ Email: support@farmdudh.com
+              ✉️ Email: support@Malatidairy.com
             </button>
           </div>
         </div>

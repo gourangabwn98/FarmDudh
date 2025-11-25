@@ -26,6 +26,8 @@ import {
 import { useAuth } from "../components/AuthContext";
 import { toast } from "react-toastify";
 import { useCart } from "../components/CartContext";
+import VoiceShopping from "../components/VoiceShopping";
+// import VoiceShopping from "../components/VoiceShopping"; // Adjust path
 
 function CartCheckout() {
   const navigate = useNavigate();
@@ -145,7 +147,7 @@ function CartCheckout() {
               Order Placed Successfully!
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Thank you for choosing FarmDudh!
+              Thank you for choosing Malati Dairy!
             </p>
             <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-6 mb-8">
               <p className="text-sm text-gray-600 mb-2">Order Number</p>
@@ -154,7 +156,7 @@ function CartCheckout() {
               </p>
               <div className="flex items-center justify-center gap-2 text-gray-700">
                 <Clock size={20} className="text-green-600" />
-                <span>Estimated delivery: 10 minutes</span>
+                <span>Estimated delivery: 30 minutes</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -577,6 +579,34 @@ function CartCheckout() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Voice-Activated Shopping */}
+                  {cartItems.length > 0 && (
+                    <VoiceShopping
+                      addToCart={async (item) => {
+                        // Match your CartContext add logic
+                        const product = {
+                          _id: Date.now().toString(),
+                          ...item,
+                        };
+                        // Call your CartContext add function
+                        // Example: addToCart(product);
+                        // Replace with your actual add function
+                        toast.success(
+                          `${item.quantity}${item.unit} ${item.name} added!`
+                        );
+                        // Force re-render
+                        window.location.reload();
+                      }}
+                      removeFromCart={async (name) => {
+                        const item = cartItems.find((i) => i.name === name);
+                        if (item) {
+                          removeFromCart(item._id);
+                          toast.success(`${name} removed`);
+                        }
+                      }}
+                    />
+                  )}
 
                   {/* Coupon Section */}
                   <div className="bg-white rounded-2xl p-6 shadow-lg mt-6">

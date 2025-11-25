@@ -23,8 +23,8 @@ function Features() {
       desc: "Our milk retains its natural nutrients through careful handling, delivered fresh to Purba Burdwan homes.",
     },
     {
-      title: "Delivered within 10 minutes!",
-      desc: "Fresh A2 milk delivered to your doorstep in Purba Burdwan within 10 minutes, straight from our local carts.",
+      title: "Delivered within 30 minutes!",
+      desc: "Fresh A2 milk delivered to your doorstep in Purba Burdwan within 30 minutes, straight from our local carts.",
     },
   ];
 
@@ -32,7 +32,7 @@ function Features() {
     <section id="features" className="py-16 bg-milkvilla-light">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center text-milkvilla-green mb-8">
-          Why Choose FarmDudh in Purba Burdwan?
+          Why Choose Malati Dairy in Purba Burdwan?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (

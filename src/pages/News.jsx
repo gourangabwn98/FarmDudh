@@ -105,7 +105,7 @@ function Contact() {
             GET IN TOUCH
           </span>
           <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6">
-            Contact FarmDudh
+            Contact Malati Dairy
           </h1>
           <p className="text-xl text-green-100 max-w-3xl mx-auto leading-relaxed">
             Have questions about our A2 dairy products? We're here to help!
@@ -136,7 +136,7 @@ function Contact() {
               {
                 Icon: Mail,
                 title: "Email Us",
-                info: "support@farmdudh.com",
+                info: "support@Malatidairy.com",
                 subInfo: "We'll respond within 24 hrs",
                 color: "from-purple-500 to-pink-500",
               },
@@ -354,7 +354,7 @@ function Contact() {
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="FarmDudh Location"
+                  title="Malati Dairy Location"
                 />
               </div>
 

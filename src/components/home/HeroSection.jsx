@@ -173,7 +173,7 @@ function HeroSection() {
             eco-friendly Packaging
             <span className="absolute bottom-0 left-0 w-full h-1 bg-yellow-400 opacity-50"></span>
           </span>{" "}
-          within 10 minutes.
+          within 30 minutes.
         </p>
 
         {/* CTA Buttons */}

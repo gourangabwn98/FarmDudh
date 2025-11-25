@@ -31,7 +31,7 @@ function Header() {
             <div className="relative h-12 w-12">
               <video
                 src="/assets/videos/milk.mp4"
-                alt="FarmDudh Logo"
+                alt="Malati Dairy Logo"
                 className="h-full w-full object-cover rounded-full hover:animate-scaleHover transition-all duration-300"
                 autoPlay
                 loop
@@ -39,9 +39,14 @@ function Header() {
                 playsInline
               />
             </div>
-            <span className="text-2xl md:text-3xl font-extrabold text-white bg-gradient-to-r from-green-200 to-green-400 bg-clip-text text-transparent z-10">
-              FarmDudh
-            </span>
+            {/* <span className="text-2xl md:text-3xl font-extrabold text-white bg-gradient-to-r from-green-200 to-green-400 bg-clip-text text-transparent z-10">
+              Malati
+            </span> */}
+            <img
+              src="/assets/images/malati_logo.png" // change path as needed
+              alt="Malati Logo"
+              className="h-14 w-auto object-contain"
+            />
           </Link>
         </div>
 

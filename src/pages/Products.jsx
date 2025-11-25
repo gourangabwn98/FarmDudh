@@ -125,7 +125,7 @@ function Products() {
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 py-20 overflow-hidden">
+      {/* <section className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           {[...Array(30)].map((_, i) => (
             <div
@@ -183,7 +183,7 @@ function Products() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Search and Filter */}
       <section className="py-8 bg-white border-b border-gray-200 sticky top-16 z-40 shadow-md">

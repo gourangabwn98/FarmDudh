@@ -8,8 +8,8 @@ function Stats() {
           Delivering Trust, Quality, and Freshness in Purba Burdwan
         </h2>
         <p className="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
-          FarmDudh partners with Purba Burdwan’s local farmers to deliver pure
-          A2 milk, achieving incredible milestones for our community.
+          Malati Dairy partners with Purba Burdwan’s local farmers to deliver
+          pure A2 milk, achieving incredible milestones for our community.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
           <div>
